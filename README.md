@@ -1,2 +1,11 @@
 # tabasco
-Tabasto is user action analytics system
+
+타바스코는 유저 행동 분석 플랫폼입니다. 유저 행동을 분석하여 여러가지 방법으로 모니터링할 수 있습니다.
+
+## UseCases
+
+### 어뷰저 탐지
+
+우리 게임에서 사냥으로 하루에 100만 골드 이상 벌 수 없습니다. 이러한 유저들을 찾아서 실시간으로 확인할 수 있습니다.
+
+## Architecture
