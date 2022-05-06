@@ -1,13 +1,13 @@
 package main
 
 import (
-	"log"
+	"gomod.pekora.dev/tabasco/internal/eventadapter/interfaces/apiserver"
 
-	"gomod.pekora.dev/tabasco/internal/interface/httpapi"
+	"log"
 )
 
 func main() {
 	log.Println("Tabasco in your mouse!!")
 
-	httpapi.LunchHTTPServer()
+	apiserver.StartHTTPServer()
 }
