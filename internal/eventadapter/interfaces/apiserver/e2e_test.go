@@ -74,7 +74,7 @@ var _ = Describe("API Server", func() {
 		Expect(err).Should(Succeed())
 
 		request := httptest.NewRequest("POST", "/service/"+invalidServiceKey+"/event", bytes.NewBuffer(requestBody))
-		It("Return 200", func() {
+		It("Return 401", func() {
 			response, err := app.Test(request)
 			Expect(response.StatusCode).Should(Equal(http.StatusUnauthorized))
 			Expect(err).Should(Succeed())
