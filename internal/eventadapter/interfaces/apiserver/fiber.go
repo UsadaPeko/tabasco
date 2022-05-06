@@ -2,7 +2,7 @@ package apiserver
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"net/http"
+	"gomod.pekora.dev/tabasco/internal/eventadapter/interfaces/apiserver/serviceroutes"
 )
 
 func StartHTTPServer() {
@@ -17,9 +17,7 @@ func MakeServer() *fiber.App {
 	})
 
 	{
-		app.Post("/service/:serviceKey/event", func(c *fiber.Ctx) error {
-			return c.SendStatus(http.StatusOK)
-		})
+		app.Post("/service/:serviceKey/event", serviceroutes.Event)
 	}
 	return app
 }
