@@ -1,7 +1,7 @@
 package serviceroutes
 
 import (
-	"encoding/json"
+	"github.com/UsadaPeko/jsn"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
 
@@ -16,13 +16,12 @@ func Event(c *fiber.Ctx) error {
 		return c.SendStatus(http.StatusUnauthorized)
 	}
 
-	jsonObject := map[string]interface{}{}
-	err := json.Unmarshal(c.Body(), &jsonObject)
+	j, err := jsn.New(string(c.Body()))
 	if err != nil {
 		return c.SendStatus(http.StatusInternalServerError)
 	}
 
-	_, ok := jsonObject["user_id"]
+	_, ok := j.StringVal("user_id")
 	if !ok {
 		return c.SendStatus(http.StatusBadRequest)
 	}
