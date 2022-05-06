@@ -1,10 +1,11 @@
 package serviceroutes
 
 import (
+	"encoding/json"
 	"github.com/gofiber/fiber/v2"
-	"gomod.pekora.dev/tabasco/internal/eventadapter/usecases"
 	"net/http"
-	"strings"
+
+	"gomod.pekora.dev/tabasco/internal/eventadapter/usecases"
 )
 
 func Event(c *fiber.Ctx) error {
@@ -14,7 +15,15 @@ func Event(c *fiber.Ctx) error {
 	if uc.ValidateServiceKey(serviceKey) != nil {
 		return c.SendStatus(http.StatusUnauthorized)
 	}
-	if !strings.Contains(string(c.Body()), "user_id") {
+
+	jsonObject := map[string]interface{}{}
+	err := json.Unmarshal(c.Body(), &jsonObject)
+	if err != nil {
+		return c.SendStatus(http.StatusInternalServerError)
+	}
+
+	_, ok := jsonObject["user_id"]
+	if !ok {
 		return c.SendStatus(http.StatusBadRequest)
 	}
 
