@@ -82,4 +82,23 @@ var _ = Describe("API Server", func() {
 		})
 
 	})
+
+	Context("Call POST root/rules", func() {
+		When("A 이벤트가 발생하는 rule 생성", func() {
+			jsonObject := map[string]interface{}{
+				"target_event_name": "A",
+				"service_id":        "c5d7c94f",
+			}
+			requestBody, err := json.Marshal(jsonObject)
+			Expect(err).Should(Succeed())
+
+			request := httptest.NewRequest("POST", "/rules", bytes.NewBuffer(requestBody))
+			It("Return 201", func() {
+				response, err := app.Test(request)
+				Expect(response.StatusCode).Should(Equal(http.StatusCreated))
+				Expect(err).Should(Succeed())
+			})
+		})
+	})
+
 })
