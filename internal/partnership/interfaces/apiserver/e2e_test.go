@@ -76,7 +76,7 @@ var _ = Describe("API Server", func() {
 			Expect(ok).Should(BeTrue())
 
 			Context("Call GET root/partnership/{id}", func() {
-				request = httptest.NewRequest("POST", "/partnership/"+id, nil)
+				request = httptest.NewRequest("GET", "/partnership/"+id, nil)
 				response, err = app.Test(request)
 				It("Return 200", func() {
 					Expect(response.StatusCode).Should(Equal(http.StatusOK))
@@ -102,7 +102,7 @@ var _ = Describe("API Server", func() {
 
 		Context("Call GET root/partnership/{id}", func() {
 			When("With not exist id", func() {
-				request := httptest.NewRequest("POST", "/partnership/"+uuid.NewString(), nil)
+				request := httptest.NewRequest("GET", "/partnership/"+uuid.NewString(), nil)
 				response, err := app.Test(request)
 				It("Return 404", func() {
 					Expect(response.StatusCode).Should(Equal(http.StatusNotFound))
