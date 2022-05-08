@@ -17,11 +17,17 @@ func MakeServer() *fiber.App {
 	app.Get("/", func(ctx *fiber.Ctx) error {
 		return ctx.SendString("Partnership root page")
 	})
-
+	id := uuid.NewString()
 	app.Post("/partnership", func(ctx *fiber.Ctx) error {
 		responseBody := jsn.Init()
-		responseBody.Set("id", uuid.NewString())
+		responseBody.Set("id", id)
 		return ctx.Status(http.StatusCreated).SendString(responseBody.String())
+	})
+	app.Post("/partnership/"+id, func(ctx *fiber.Ctx) error {
+		responseBody := jsn.Init()
+		responseBody.Set("id", id)
+		responseBody.Set("name", "Tabasco")
+		return ctx.Status(http.StatusOK).SendString(responseBody.String())
 	})
 	return app
 }
