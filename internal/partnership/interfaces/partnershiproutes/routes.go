@@ -4,6 +4,7 @@ import (
 	"github.com/UsadaPeko/jsn"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"github.com/speps/go-hashids/v2"
 	"net/http"
 )
 
@@ -44,7 +45,18 @@ func GetPartnership(ctx *fiber.Ctx) error {
 }
 
 func PostPartnershipNewIntegrations(ctx *fiber.Ctx) error {
+	hd := hashids.NewData()
+	hd.Salt = "this is my salt"
+	hd.MinLength = 15
+	id := ctx.Params("id")
+
+	uid := uuid.MustParse(id)
+
+	hids, _ := hashids.NewWithData(hd)
+	key, _ := hids.Encode([]int{uid.ClockSequence()})
+
 	responseBody := jsn.Init()
-	responseBody.Set("key", uuid.NewString())
+	responseBody.Set("key", key)
+
 	return ctx.Status(http.StatusCreated).SendString(responseBody.String())
 }
