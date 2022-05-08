@@ -5,8 +5,10 @@ go 1.18
 require (
 	github.com/UsadaPeko/jsn v0.0.0-20220506164015-5663030a3b2e
 	github.com/gofiber/fiber/v2 v2.26.0
+	github.com/google/uuid v1.3.0
 	github.com/onsi/ginkgo/v2 v2.1.4
 	github.com/onsi/gomega v1.19.0
+	github.com/speps/go-hashids/v2 v2.0.1
 )
 
 require (
