@@ -2,6 +2,7 @@ package apiserver_test
 
 import (
 	"github.com/UsadaPeko/jsn"
+	"github.com/google/uuid"
 	"gomod.pekora.dev/tabasco/internal/partnership/interfaces/apiserver"
 	"io/ioutil"
 
@@ -77,7 +78,7 @@ var _ = Describe("API Server", func() {
 			Context("Call GET root/partnership/{id}", func() {
 				request = httptest.NewRequest("POST", "/partnership/"+id, nil)
 				response, err = app.Test(request)
-				It("Return 20", func() {
+				It("Return 200", func() {
 					Expect(response.StatusCode).Should(Equal(http.StatusOK))
 					Expect(err).Should(Succeed())
 				})
@@ -95,6 +96,17 @@ var _ = Describe("API Server", func() {
 					name, ok := responseBody.StringVal("name")
 					Expect(ok).Should(BeTrue())
 					Expect(name).Should(Equal("Tabasco"))
+				})
+			})
+		})
+
+		Context("Call GET root/partnership/{id}", func() {
+			When("With not exist id", func() {
+				request := httptest.NewRequest("POST", "/partnership/"+uuid.NewString(), nil)
+				response, err := app.Test(request)
+				It("Return 404", func() {
+					Expect(response.StatusCode).Should(Equal(http.StatusNotFound))
+					Expect(err).Should(Succeed())
 				})
 			})
 		})
