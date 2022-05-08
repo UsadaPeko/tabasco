@@ -17,7 +17,7 @@ func MakeServer() *fiber.App {
 	})
 
 	app.Post("/partnership", func(ctx *fiber.Ctx) error {
-		return ctx.Status(http.StatusCreated).SendString(`{"id": "7648d8e3-a31b-44a4-9d3b-f30679d4f3b6"}`)
+		return ctx.Status(http.StatusCreated).SendString(`{"id": "AF3D1D06-BB2D-470C-A842-360195FD046A"}`)
 	})
 	return app
 }
