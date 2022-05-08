@@ -53,5 +53,51 @@ var _ = Describe("API Server", func() {
 			})
 		})
 
+		When("Already made partnership", func() {
+			jsonObject := map[string]interface{}{
+				"name": "Tabasco",
+			}
+			requestBody, err := json.Marshal(jsonObject)
+			Expect(err).Should(Succeed())
+
+			request := httptest.NewRequest("POST", "/partnership", bytes.NewBuffer(requestBody))
+			response, err := app.Test(request)
+			Expect(response.StatusCode).Should(Equal(http.StatusCreated))
+			Expect(err).Should(Succeed())
+
+			body, err := ioutil.ReadAll(response.Body)
+			Expect(err).Should(Succeed())
+
+			responseBody, err := jsn.New(string(body))
+			Expect(err).Should(Succeed())
+
+			id, ok := responseBody.StringVal("id")
+			Expect(ok).Should(BeTrue())
+
+			Context("Call GET root/partnership/{id}", func() {
+				request = httptest.NewRequest("POST", "/partnership/"+id, nil)
+				response, err = app.Test(request)
+				It("Return 20", func() {
+					Expect(response.StatusCode).Should(Equal(http.StatusOK))
+					Expect(err).Should(Succeed())
+				})
+				It("Can found information", func() {
+					body, err := ioutil.ReadAll(response.Body)
+					Expect(err).Should(Succeed())
+
+					responseBody, err := jsn.New(string(body))
+					Expect(err).Should(Succeed())
+
+					foundID, ok := responseBody.StringVal("id")
+					Expect(ok).Should(BeTrue())
+					Expect(foundID).Should(Equal(id))
+
+					name, ok := responseBody.StringVal("name")
+					Expect(ok).Should(BeTrue())
+					Expect(name).Should(Equal("Tabasco"))
+				})
+			})
+		})
+
 	})
 })
