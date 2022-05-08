@@ -36,15 +36,12 @@ var _ = Describe("API Server", func() {
 			Expect(err).Should(Succeed())
 
 			request := httptest.NewRequest("POST", "/partnership", bytes.NewBuffer(requestBody))
+			response, err := app.Test(request)
 			It("Return 201", func() {
-				response, err := app.Test(request)
 				Expect(response.StatusCode).Should(Equal(http.StatusCreated))
 				Expect(err).Should(Succeed())
 			})
 			It("Return partnership's id", func() {
-				response, err := app.Test(request)
-				Expect(err).Should(Succeed())
-
 				body, err := ioutil.ReadAll(response.Body)
 				Expect(err).Should(Succeed())
 
