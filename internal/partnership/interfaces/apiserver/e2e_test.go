@@ -98,6 +98,31 @@ var _ = Describe("API Server", func() {
 					Expect(name).Should(Equal("Tabasco"))
 				})
 			})
+			Context("Call POST root/partnership/{id}/integrations", func() {
+				jsonObject := map[string]interface{}{
+					"type": "custom_event",
+				}
+				requestBody, err := json.Marshal(jsonObject)
+				Expect(err).Should(Succeed())
+
+				request = httptest.NewRequest("POST", "/partnership/"+id+"/integrations", bytes.NewBuffer(requestBody))
+				response, err = app.Test(request)
+				It("Return 201", func() {
+					Expect(response.StatusCode).Should(Equal(http.StatusCreated))
+					Expect(err).Should(Succeed())
+				})
+				It("Can found integration key", func() {
+					body, err := ioutil.ReadAll(response.Body)
+					Expect(err).Should(Succeed())
+
+					responseBody, err := jsn.New(string(body))
+					Expect(err).Should(Succeed())
+
+					key, ok := responseBody.StringVal("key")
+					Expect(ok).Should(BeTrue())
+					Expect(key).Should(Not(BeEmpty()))
+				})
+			})
 		})
 
 		Context("Call GET root/partnership/{id}", func() {
