@@ -108,20 +108,44 @@ var _ = Describe("API Server", func() {
 
 				request = httptest.NewRequest("POST", "/partnership/"+id+"/integrations", bytes.NewBuffer(requestBody))
 				response, err := app.Test(request)
+
+				body, err := ioutil.ReadAll(response.Body)
+				Expect(err).Should(Succeed())
+
+				responseBody, err := jsn.New(string(body))
+				Expect(err).Should(Succeed())
+
 				It("Return 201", func() {
 					Expect(response.StatusCode).Should(Equal(http.StatusCreated))
 					Expect(err).Should(Succeed())
 				})
 				It("Can found integration key", func() {
-					body, err := ioutil.ReadAll(response.Body)
-					Expect(err).Should(Succeed())
-
-					responseBody, err := jsn.New(string(body))
-					Expect(err).Should(Succeed())
-
 					key, ok := responseBody.StringVal("key")
 					Expect(ok).Should(BeTrue())
 					Expect(key).Should(Not(BeEmpty()))
+				})
+				Context("Call GET root/partnership/{id}/integrations/check/{key}", func() {
+					key, ok := responseBody.StringVal("key")
+					Expect(ok).Should(BeTrue())
+
+					When("With right key", func() {
+						request := httptest.NewRequest("GET", "/partnership/"+id+"/integrations/check/"+key, nil)
+						response, err := app.Test(request)
+
+						It("Return 200", func() {
+							Expect(response.StatusCode).Should(Equal(http.StatusOK))
+							Expect(err).Should(Succeed())
+						})
+					})
+					When("With wrong key", func() {
+						request := httptest.NewRequest("GET", "/partnership/"+id+"/integrations/check/invalidkey", nil)
+						response, err := app.Test(request)
+
+						It("Return 404", func() {
+							Expect(response.StatusCode).Should(Equal(http.StatusNotFound))
+							Expect(err).Should(Succeed())
+						})
+					})
 				})
 			})
 		})

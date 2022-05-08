@@ -44,19 +44,46 @@ func GetPartnership(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).SendString(responseBody.String())
 }
 
-func PostPartnershipNewIntegrations(ctx *fiber.Ctx) error {
-	hd := hashids.NewData()
+var (
+	hd   *hashids.HashIDData
+	hids *hashids.HashID
+)
+
+func init() {
+	hd = hashids.NewData()
 	hd.Salt = "this is my salt"
 	hd.MinLength = 15
+	hids, _ = hashids.NewWithData(hd)
+}
+
+func PostPartnershipNewIntegrations(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 
 	uid := uuid.MustParse(id)
 
-	hids, _ := hashids.NewWithData(hd)
 	key, _ := hids.Encode([]int{uid.ClockSequence()})
 
 	responseBody := jsn.Init()
 	responseBody.Set("key", key)
 
 	return ctx.Status(http.StatusCreated).SendString(responseBody.String())
+}
+
+func GetPartnershipIntegrationKey(ctx *fiber.Ctx) error {
+	key := ctx.Params("key")
+	hashedValue, err := hids.DecodeWithError(key)
+	if err != nil {
+		return ctx.SendStatus(http.StatusNotFound)
+	}
+	if len(hashedValue) < 1 {
+		return ctx.SendStatus(http.StatusNotFound)
+	}
+
+	id := ctx.Params("id")
+	uid := uuid.MustParse(id)
+	if hashedValue[0] != uid.ClockSequence() {
+		return ctx.SendStatus(http.StatusNotFound)
+	}
+
+	return ctx.SendStatus(http.StatusOK)
 }

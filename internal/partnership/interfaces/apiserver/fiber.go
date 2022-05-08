@@ -20,5 +20,6 @@ func MakeServer() *fiber.App {
 	app.Get("/partnership/:id", partnershiproutes.GetPartnership)
 
 	app.Post("/partnership/:id/integrations", partnershiproutes.PostPartnershipNewIntegrations)
+	app.Get("/partnership/:id/integrations/check/:key", partnershiproutes.GetPartnershipIntegrationKey)
 	return app
 }
