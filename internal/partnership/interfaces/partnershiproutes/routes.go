@@ -42,3 +42,9 @@ func GetPartnership(ctx *fiber.Ctx) error {
 
 	return ctx.Status(http.StatusOK).SendString(responseBody.String())
 }
+
+func PostPartnershipNewIntegrations(ctx *fiber.Ctx) error {
+	responseBody := jsn.Init()
+	responseBody.Set("key", uuid.NewString())
+	return ctx.Status(http.StatusCreated).SendString(responseBody.String())
+}

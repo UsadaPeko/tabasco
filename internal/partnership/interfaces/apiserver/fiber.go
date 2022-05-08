@@ -18,5 +18,7 @@ func MakeServer() *fiber.App {
 
 	app.Post("/partnership", partnershiproutes.PostPartnership)
 	app.Get("/partnership/:id", partnershiproutes.GetPartnership)
+
+	app.Post("/partnership/:id/integrations", partnershiproutes.PostPartnershipNewIntegrations)
 	return app
 }

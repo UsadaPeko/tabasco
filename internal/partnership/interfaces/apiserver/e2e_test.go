@@ -77,7 +77,7 @@ var _ = Describe("API Server", func() {
 
 			Context("Call GET root/partnership/{id}", func() {
 				request = httptest.NewRequest("GET", "/partnership/"+id, nil)
-				response, err = app.Test(request)
+				response, err := app.Test(request)
 				It("Return 200", func() {
 					Expect(response.StatusCode).Should(Equal(http.StatusOK))
 					Expect(err).Should(Succeed())
@@ -98,7 +98,8 @@ var _ = Describe("API Server", func() {
 					Expect(name).Should(Equal("Tabasco"))
 				})
 			})
-			Context("Call POST root/partnership/{id}/integrations", func() {
+
+			When("Call POST root/partnership/{id}/integrations", func() {
 				jsonObject := map[string]interface{}{
 					"type": "custom_event",
 				}
@@ -106,7 +107,7 @@ var _ = Describe("API Server", func() {
 				Expect(err).Should(Succeed())
 
 				request = httptest.NewRequest("POST", "/partnership/"+id+"/integrations", bytes.NewBuffer(requestBody))
-				response, err = app.Test(request)
+				response, err := app.Test(request)
 				It("Return 201", func() {
 					Expect(response.StatusCode).Should(Equal(http.StatusCreated))
 					Expect(err).Should(Succeed())
