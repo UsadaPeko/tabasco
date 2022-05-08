@@ -34,8 +34,11 @@ func PostPartnership(ctx *fiber.Ctx) error {
 
 func GetPartnership(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	responseBody := jsn.Init()
-	responseBody.Set("id", id)
-	responseBody.Set("name", "Tabasco")
+
+	responseBody, ok := cache[id]
+	if !ok {
+		return ctx.SendStatus(http.StatusNotFound)
+	}
+
 	return ctx.Status(http.StatusOK).SendString(responseBody.String())
 }
