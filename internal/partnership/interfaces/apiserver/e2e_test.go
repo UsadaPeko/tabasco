@@ -1,7 +1,9 @@
 package apiserver_test
 
 import (
+	"github.com/UsadaPeko/jsn"
 	"gomod.pekora.dev/tabasco/internal/partnership/interfaces/apiserver"
+	"io/ioutil"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -38,6 +40,19 @@ var _ = Describe("API Server", func() {
 				response, err := app.Test(request)
 				Expect(response.StatusCode).Should(Equal(http.StatusCreated))
 				Expect(err).Should(Succeed())
+			})
+			It("Return partnership's id", func() {
+				response, err := app.Test(request)
+				Expect(err).Should(Succeed())
+
+				body, err := ioutil.ReadAll(response.Body)
+				Expect(err).Should(Succeed())
+
+				responseBody, err := jsn.New(string(body))
+				Expect(err).Should(Succeed())
+
+				_, ok := responseBody.StringVal("id")
+				Expect(ok).Should(BeTrue())
 			})
 		})
 
