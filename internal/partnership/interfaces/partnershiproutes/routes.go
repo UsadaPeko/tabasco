@@ -3,12 +3,32 @@ package partnershiproutes
 import (
 	"github.com/UsadaPeko/jsn"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"net/http"
 )
 
+var (
+	cache map[string]*jsn.JSON = map[string]*jsn.JSON{}
+)
+
 func PostPartnership(ctx *fiber.Ctx) error {
+	id := uuid.NewString()
+
+	requestBody, err := jsn.New(string(ctx.Body()))
+	if err != nil {
+		return err
+	}
+
+	serviceName, ok := requestBody.StringVal("name")
+	if !ok {
+		return ctx.SendStatus(http.StatusBadRequest)
+	}
+
 	responseBody := jsn.Init()
-	responseBody.Set("id", "97FD9E6E-56A6-44B8-8411-E8D3EFD96D6C")
+	responseBody.Set("id", id)
+	responseBody.Set("name", serviceName)
+
+	cache[id] = responseBody
 	return ctx.Status(http.StatusCreated).SendString(responseBody.String())
 }
 
